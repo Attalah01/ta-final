@@ -1,6 +1,6 @@
 import { styles } from "@/app/styles/style";
-import Image from "next/image";
-import React, { FC, useState } from "react";
+import { useGetHeroDataQuery } from "@/redux/features/layout/layoutApi";
+import React, { FC, useEffect, useState } from "react";
 
 type Props = {
   courseInfo: any;
@@ -16,6 +16,14 @@ const CourseInformation: FC<Props> = ({
   setActive,
 }) => {
   const [dragging, setDragging] = useState(false);
+  const { data } = useGetHeroDataQuery("Categories", {});
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    if (data) {
+      setCategories(data.layout.categories);
+    }
+  }, [data]);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -26,6 +34,7 @@ const CourseInformation: FC<Props> = ({
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
+
       reader.onload = (e: any) => {
         if (reader.readyState === 2) {
           setCourseInfo({ ...courseInfo, thumbnail: reader.result });
@@ -39,13 +48,16 @@ const CourseInformation: FC<Props> = ({
     e.preventDefault();
     setDragging(true);
   };
+
   const handleDragLeave = (e: any) => {
     e.preventDefault();
     setDragging(false);
   };
+
   const handleDrop = (e: any) => {
     e.preventDefault();
     setDragging(false);
+
     const file = e.dataTransfer.files?.[0];
 
     if (file) {
@@ -72,23 +84,22 @@ const CourseInformation: FC<Props> = ({
               setCourseInfo({ ...courseInfo, name: e.target.value })
             }
             id="name"
-            placeholder=""
-            className={`${styles.input}`}
+            placeholder="MERN stack LMS platform with next 13"
+            className={`
+            ${styles.input}`}
           />
         </div>
         <br />
         <div className="mb-5">
-          <label htmlFor="" className={`${styles.label}`}>
-            Course Description
-          </label>
+          <label className={`${styles.label}`}>Course Description</label>
           <textarea
             name=""
             id=""
             cols={30}
             rows={8}
-            placeholder=""
-            value={courseInfo.description}
+            placeholder="Write something amazing..."
             className={`${styles.input} !h-min !py-2`}
+            value={courseInfo.description}
             onChange={(e: any) =>
               setCourseInfo({ ...courseInfo, description: e.target.value })
             }
@@ -97,9 +108,7 @@ const CourseInformation: FC<Props> = ({
         <br />
         <div className="w-full flex justify-between">
           <div className="w-[45%]">
-            <label htmlFor="" className={`${styles.label}`}>
-              Course Price
-            </label>
+            <label className={`${styles.label}`}>Course Price</label>
             <input
               type="number"
               name=""
@@ -108,64 +117,93 @@ const CourseInformation: FC<Props> = ({
               onChange={(e: any) =>
                 setCourseInfo({ ...courseInfo, price: e.target.value })
               }
-              className={`${styles.input}`}
+              id="price"
+              placeholder="29"
+              className={`
+            ${styles.input}`}
             />
           </div>
-          <div className="w-[45%]">
-            <label htmlFor="" className={`${styles.label}`}>
+          <div className="w-[50%]">
+            <label className={`${styles.label} w-[50%]`}>
               Estimated Price (optional)
             </label>
             <input
               type="number"
               name=""
-              required
               value={courseInfo.estimatedPrice}
               onChange={(e: any) =>
                 setCourseInfo({ ...courseInfo, estimatedPrice: e.target.value })
               }
-              className={`${styles.input}`}
+              id="price"
+              placeholder="79"
+              className={`
+            ${styles.input}`}
             />
           </div>
-        </div>
-        <br />
-        <div>
-          <label htmlFor="email" className={`${styles.label}`}>
-            Course Tags
-          </label>
-          <input
-            type="text"
-            name=""
-            id="tags"
-            required
-            value={courseInfo.tags}
-            onChange={(e: any) =>
-              setCourseInfo({ ...courseInfo, tags: e.target.value })
-            }
-            placeholder=""
-            className={`${styles.input}`}
-          />
         </div>
         <br />
         <div className="w-full flex justify-between">
           <div className="w-[45%]">
-            <label htmlFor="" className={`${styles.label}`}>
-              Course Level
+            <label className={`${styles.label}`} htmlFor="email">
+              Course Tags
             </label>
             <input
               type="text"
-              name=""
               required
+              name=""
+              value={courseInfo.tags}
+              onChange={(e: any) =>
+                setCourseInfo({ ...courseInfo, tags: e.target.value })
+              }
+              id="tags"
+              placeholder="MERN,Next 13,Socket io,tailwind css,LMS"
+              className={`
+            ${styles.input}`}
+            />
+          </div>
+          <div className="w-[50%]">
+            <label className={`${styles.label} w-[50%]`}>
+              Course Categories
+            </label>
+            <select
+              name=""
+              id=""
+              className={`${styles.input}`}
+              value={courseInfo.category}
+              onChange={(e: any) =>
+                setCourseInfo({ ...courseInfo, categories: e.target.value })
+              }
+            >
+              <option value="">Select Category</option>
+              {categories &&
+                categories.map((item: any) => (
+                  <option value={item.title} key={item._id}>
+                    {item.title}
+                  </option>
+                ))}
+            </select>
+          </div>
+        </div>
+        <br />
+        <div className="w-full flex justify-between">
+          <div className="w-[45%]">
+            <label className={`${styles.label}`}>Course Level</label>
+            <input
+              type="text"
+              name=""
               value={courseInfo.level}
+              required
               onChange={(e: any) =>
                 setCourseInfo({ ...courseInfo, level: e.target.value })
               }
-              className={`${styles.input}`}
+              id="level"
+              placeholder="Beginner/Intermediate/Expert"
+              className={`
+            ${styles.input}`}
             />
           </div>
-          <div className="w-50%]">
-            <label htmlFor="" className={`${styles.label}`}>
-              Demo Url
-            </label>
+          <div className="w-[50%]">
+            <label className={`${styles.label} w-[50%]`}>Demo Url</label>
             <input
               type="text"
               name=""
@@ -174,7 +212,10 @@ const CourseInformation: FC<Props> = ({
               onChange={(e: any) =>
                 setCourseInfo({ ...courseInfo, demoUrl: e.target.value })
               }
-              className={`${styles.input}`}
+              id="demoUrl"
+              placeholder="eer74fd"
+              className={`
+            ${styles.input}`}
             />
           </div>
         </div>
@@ -197,7 +238,11 @@ const CourseInformation: FC<Props> = ({
             onDrop={handleDrop}
           >
             {courseInfo.thumbnail ? (
-              <Image src={courseInfo.thumbnail} alt="" className="w-full h-full object-cover" width={100} height={100} />
+              <img
+                src={courseInfo.thumbnail}
+                alt=""
+                className="max-h-full w-full object-cover"
+              />
             ) : (
               <span className="text-black dark:text-white">
                 Drag and drop your thumbnail here or click to browse
@@ -207,8 +252,14 @@ const CourseInformation: FC<Props> = ({
         </div>
         <br />
         <div className="w-full flex items-center justify-end">
-            <input type="submit" value="next" className="w-full 800px:w-[180px] h-[40px] bg-[#37a39a] text-center text-white rounded mt-8 cursor-pointer" />
+          <input
+            type="submit"
+            value="Next"
+            className="w-full 800px:w-[180px] h-[40px] bg-[#37a39a] text-center text-[#fff] rounded mt-8 cursor-pointer"
+          />
         </div>
+        <br />
+        <br />
       </form>
     </div>
   );

@@ -5,7 +5,7 @@ interface MonthData {
   count: number;
 }
 
-export async function generateLast12MonthsData<T extends Document>(
+export async function generateLast12MothsData<T extends Document>(
   model: Model<T>
 ): Promise<{ last12Months: MonthData[] }> {
   const last12Months: MonthData[] = [];
@@ -37,6 +37,5 @@ export async function generateLast12MonthsData<T extends Document>(
     });
     last12Months.push({ month: monthYear, count });
   }
-
   return { last12Months };
 }

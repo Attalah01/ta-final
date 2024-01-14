@@ -1,11 +1,11 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import { store } from "../redux/features/store";
 
-interface ProviderProps {
-    children: any
+interface ProvidersProps {
+  children: any;
 }
 
-export function Providers({children}: ProviderProps){
-    return <Provider store={store}>{children}</Provider>
+export function Providers({ children }: ProvidersProps) {
+  return <Provider store={store}>{children}</Provider>;
 }

@@ -30,11 +30,12 @@ export const apiSlice = createApi({
             })
           );
         } catch (error: any) {
-          console.error(error);
+          console.log(error);
         }
       },
     }),
   }),
 });
+
 
 export const { useRefreshTokenQuery, useLoadUserQuery } = apiSlice;

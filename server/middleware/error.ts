@@ -12,11 +12,11 @@ export const ErrorMiddleware = (
 
   // wrong mongodb id error
   if (err.name === "CastError") {
-    const message = `Resource not found. Invalid ${err.path}`;
+    const message = `Resource not found. Invalid: ${err.path}`;
     err = new ErrorHandler(message, 400);
   }
 
-  // duplicate key error
+  // Duplicate key error
   if (err.code === 11000) {
     const message = `Duplicate ${Object.keys(err.keyValue)} entered`;
     err = new ErrorHandler(message, 400);
@@ -29,8 +29,8 @@ export const ErrorMiddleware = (
   }
 
   // JWT expired error
-  if (err.name === "TokenExpiredError") {
-    const message = "Json web token is expired, try again";
+  if (err.name === "TokenExpiredError") {       
+    const message = `Json web token is expired, try again`;
     err = new ErrorHandler(message, 400);
   }
 

@@ -1,12 +1,24 @@
-import express from "express"
-import { isAuthenticated } from "../middleware/auth"
-import { createOrder, getAllOrders } from "../controllers/order.controller"
-import { authorizeRole } from "../controllers/user.controller"
+import express from "express";
+import { authorizeRoles, isAutheticated } from "../middleware/auth";
+import {
+  createOrder,
+  getAllOrders,
+  newPayment,
+  sendStripePublishableKey,
+} from "../controllers/order.controller";
+const orderRouter = express.Router();
 
-const orederRouter = express.Router()
+orderRouter.post("/create-order", isAutheticated, createOrder);
 
-orederRouter.post("/create-order", isAuthenticated, createOrder)
+orderRouter.get(
+  "/get-orders",
+  isAutheticated,
+  authorizeRoles("admin"),
+  getAllOrders
+);
 
-orederRouter.get("/get-orders", isAuthenticated, authorizeRole("admin"), getAllOrders)
+orderRouter.get("/payment/stripepublishablekey", sendStripePublishableKey);
 
-export default orederRouter
+orderRouter.post("/payment", isAutheticated, newPayment);
+
+export default orderRouter;

@@ -32,17 +32,23 @@ export const authApi = apiSlice.injectEndpoints({
       },
     }),
     activation: builder.mutation({
-      query: ({ activation_code, activation_token }) => ({
+      query: ({ activation_token, activation_code }) => ({
         url: "activate-user",
         method: "POST",
-        body: { activation_code, activation_token },
+        body: {
+          activation_token,
+          activation_code,
+        },
       }),
     }),
     login: builder.mutation({
       query: ({ email, password }) => ({
         url: "login",
         method: "POST",
-        body: { email, password },
+        body: {
+          email,
+          password,
+        },
         credentials: "include" as const,
       }),
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
@@ -55,7 +61,7 @@ export const authApi = apiSlice.injectEndpoints({
             })
           );
         } catch (error: any) {
-          console.error(error);
+          console.log(error);
         }
       },
     }),
@@ -63,7 +69,11 @@ export const authApi = apiSlice.injectEndpoints({
       query: ({ email, name, avatar }) => ({
         url: "social-auth",
         method: "POST",
-        body: { email, name, avatar },
+        body: {
+          email,
+          name,
+          avatar,
+        },
         credentials: "include" as const,
       }),
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
@@ -76,11 +86,11 @@ export const authApi = apiSlice.injectEndpoints({
             })
           );
         } catch (error: any) {
-          console.error(error);
+          console.log(error);
         }
       },
     }),
-    logout: builder.query({
+    logOut: builder.query({
       query: () => ({
         url: "logout",
         method: "GET",
@@ -88,9 +98,11 @@ export const authApi = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(arg, { queryFulfilled, dispatch }) {
         try {
-          dispatch(userLoggedOut());
+          dispatch(
+            userLoggedOut()
+          );
         } catch (error: any) {
-          console.error(error);
+          console.log(error);
         }
       },
     }),
@@ -102,5 +114,5 @@ export const {
   useActivationMutation,
   useLoginMutation,
   useSocialAuthMutation,
-  useLogoutQuery,
+  useLogOutQuery
 } = authApi;

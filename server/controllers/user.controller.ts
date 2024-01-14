@@ -1,8 +1,8 @@
 require("dotenv").config();
+import { Request, Response, NextFunction } from "express";
 import userModel, { IUser } from "../models/user.model";
 import ErrorHandler from "../utils/ErrorHandler";
-import { catchAsyncError } from "../middleware/catchAsyncError";
-import { NextFunction, Request, Response } from "express";
+import { CatchAsyncError } from "../middleware/catchAsyncErrors";
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import ejs from "ejs";
 import path from "path";
@@ -28,7 +28,7 @@ interface IRegistrationBody {
   avatar?: string;
 }
 
-export const registrationUser = catchAsyncError(
+export const registrationUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { name, email, password } = req.body;
@@ -64,7 +64,7 @@ export const registrationUser = catchAsyncError(
 
         res.status(201).json({
           success: true,
-          message: `Please check your email: ${user.email} to activate your account`,
+          message: `Please check your email: ${user.email} to activate your account!`,
           activationToken: activationToken.token,
         });
       } catch (error: any) {
@@ -100,14 +100,14 @@ export const createActivationToken = (user: any): IActivationToken => {
 
 // activate user
 interface IActivationRequest {
-  activation_code: string;
   activation_token: string;
+  activation_code: string;
 }
 
-export const activateUser = catchAsyncError(
+export const activateUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { activation_code, activation_token } =
+      const { activation_token, activation_code } =
         req.body as IActivationRequest;
 
       const newUser: { user: IUser; activationCode: string } = jwt.verify(
@@ -126,7 +126,6 @@ export const activateUser = catchAsyncError(
       if (existUser) {
         return next(new ErrorHandler("Email already exist", 400));
       }
-
       const user = await userModel.create({
         name,
         email,
@@ -135,7 +134,6 @@ export const activateUser = catchAsyncError(
 
       res.status(201).json({
         success: true,
-        user
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -143,15 +141,17 @@ export const activateUser = catchAsyncError(
   }
 );
 
-// login user
+// Login user
 interface ILoginRequest {
   email: string;
   password: string;
 }
 
-export const loginUser = catchAsyncError(
+export const loginUser = CatchAsyncError(
+  
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      
       const { email, password } = req.body as ILoginRequest;
 
       if (!email || !password) {
@@ -166,18 +166,18 @@ export const loginUser = catchAsyncError(
 
       const isPasswordMatch = await user.comparePassword(password);
       if (!isPasswordMatch) {
-        return next(new ErrorHandler("invalid email or password", 400));
+        return next(new ErrorHandler("Invalid email or password", 400));
       }
-
       sendToken(user, 200, res);
     } catch (error: any) {
+
       return next(new ErrorHandler(error.message, 400));
     }
   }
 );
 
 // logout user
-export const logoutUser = catchAsyncError(
+export const logoutUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       res.cookie("access_token", "", { maxAge: 1 });
@@ -194,24 +194,8 @@ export const logoutUser = catchAsyncError(
   }
 );
 
-// validate user role
-export const authorizeRole = (...roles: string[]) => {
-  return (req: Request, res: Response, next: NextFunction) => {
-    if (!roles.includes(req.user?.role || "")) {
-      return next(
-        new ErrorHandler(
-          `Role ${req.user?.role} is not allowed to access this resource`,
-          403
-        )
-      );
-    }
-
-    next();
-  };
-};
-
 // update access token
-export const updateAccessToken = catchAsyncError(
+export const updateAccessToken = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const refresh_token = req.cookies.refresh_token as string;
@@ -225,23 +209,29 @@ export const updateAccessToken = catchAsyncError(
         return next(new ErrorHandler(message, 400));
       }
       const session = await redis.get(decoded.id as string);
-
+         
       if (!session) {
-        return next(new ErrorHandler("Please login to access this resource!", 400));
+        return next(
+          new ErrorHandler("Please login for access this resources!", 400)
+        );
       }
-
+      
       const user = JSON.parse(session);
 
       const accessToken = jwt.sign(
         { id: user._id },
         process.env.ACCESS_TOKEN as string,
-        { expiresIn: "5m" }
+        {
+          expiresIn: "5m",
+        }
       );
 
       const refreshToken = jwt.sign(
         { id: user._id },
         process.env.REFRESH_TOKEN as string,
-        { expiresIn: "3d" }
+        {
+          expiresIn: "3d",
+        }
       );
 
       req.user = user;
@@ -249,12 +239,9 @@ export const updateAccessToken = catchAsyncError(
       res.cookie("access_token", accessToken, accessTokenOptions);
       res.cookie("refresh_token", refreshToken, refreshTokenOptions);
 
-      await redis.set(user._id, JSON.stringify(user), "EX", 604800) // 7 days
+      await redis.set(user._id, JSON.stringify(user), "EX", 604800); // 7days
 
-      res.status(200).json({
-        status: "success",
-        accessToken,
-      });
+      return next();
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
@@ -262,7 +249,7 @@ export const updateAccessToken = catchAsyncError(
 );
 
 // get user info
-export const getUserInfo = catchAsyncError(
+export const getUserInfo = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = req.user?._id;
@@ -273,19 +260,18 @@ export const getUserInfo = catchAsyncError(
   }
 );
 
-// social auth
 interface ISocialAuthBody {
   email: string;
   name: string;
   avatar: string;
 }
 
-export const socialAuth = catchAsyncError(
+// social auth
+export const socialAuth = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, name, avatar } = req.body as ISocialAuthBody;
       const user = await userModel.findOne({ email });
-
       if (!user) {
         const newUser = await userModel.create({ email, name, avatar });
         sendToken(newUser, 200, res);
@@ -301,13 +287,14 @@ export const socialAuth = catchAsyncError(
 // update user info
 interface IUpdateUserInfo {
   name?: string;
-  // email?: string;
+  email?: string;
 }
 
-export const updateUserInfo = catchAsyncError(
+export const updateUserInfo = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { name } = req.body as IUpdateUserInfo;
+
       const userId = req.user?._id;
       const user = await userModel.findById(userId);
 
@@ -316,6 +303,7 @@ export const updateUserInfo = catchAsyncError(
       }
 
       await user?.save();
+
       await redis.set(userId, JSON.stringify(user));
 
       res.status(201).json({
@@ -334,7 +322,7 @@ interface IUpdatePassword {
   newPassword: string;
 }
 
-export const updatePassword = catchAsyncError(
+export const updatePassword = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { oldPassword, newPassword } = req.body as IUpdatePassword;
@@ -356,7 +344,9 @@ export const updatePassword = catchAsyncError(
       }
 
       user.password = newPassword;
+
       await user.save();
+
       await redis.set(req.user?._id, JSON.stringify(user));
 
       res.status(201).json({
@@ -369,24 +359,24 @@ export const updatePassword = catchAsyncError(
   }
 );
 
-// update profile picture
 interface IUpdateProfilePicture {
   avatar: string;
 }
 
-export const updateProfilePicture = catchAsyncError(
+// update profile picture
+export const updateProfilePicture = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { avatar } = req.body as IUpdateProfilePicture;
 
       const userId = req.user?._id;
 
-      const user = await userModel.findById(userId);
+      const user = await userModel.findById(userId).select("+password");
 
       if (avatar && user) {
         // if user have one avatar then call this if
         if (user?.avatar?.public_id) {
-          // first declare the old umage
+          // first delete the old image
           await cloudinary.v2.uploader.destroy(user?.avatar?.public_id);
 
           const myCloud = await cloudinary.v2.uploader.upload(avatar, {
@@ -410,6 +400,7 @@ export const updateProfilePicture = catchAsyncError(
       }
 
       await user?.save();
+
       await redis.set(userId, JSON.stringify(user));
 
       res.status(200).json({
@@ -422,8 +413,8 @@ export const updateProfilePicture = catchAsyncError(
   }
 );
 
-// get all users -- only for admin
-export const getAllUsers = catchAsyncError(
+// get all users --- only for admin
+export const getAllUsers = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       getAllUsersService(res);
@@ -433,23 +424,33 @@ export const getAllUsers = catchAsyncError(
   }
 );
 
-// update user role -- only for admin
-export const updateUserRole = catchAsyncError(
+// update user role --- only for admin
+export const updateUserRole = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { id, role } = req.body;
-      updateUserRoleService(res, id, role);
+      const { email, role } = req.body;
+      const isUserExist = await userModel.findOne({ email });
+      if (isUserExist) {
+        const id = isUserExist._id;
+        updateUserRoleService(res,id, role);
+      } else {
+        res.status(400).json({
+          success: false,
+          message: "User not found",
+        });
+      }
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
   }
 );
 
-// delete user -- only for admin
-export const deleteUser = catchAsyncError(
+// Delete user --- only for admin
+export const deleteUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id } = req.params;
+
       const user = await userModel.findById(id);
 
       if (!user) {
@@ -457,6 +458,7 @@ export const deleteUser = catchAsyncError(
       }
 
       await user.deleteOne({ id });
+
       await redis.del(id);
 
       res.status(200).json({

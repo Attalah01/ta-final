@@ -5,15 +5,16 @@ import NavItems from "../utils/NavItems";
 import { ThemeSwitcher } from "../utils/ThemeSwitcher";
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
 import CustomModal from "../utils/CustomModal";
-import Login from "./auth/Login";
-import SignUp from "./auth/SignUp";
-import Verification from "./auth/Verification";
-import { useSelector } from "react-redux";
+import Login from "../components/Auth/Login";
+import SignUp from "../components/Auth/SignUp";
+import Verification from "../components/Auth/Verification";
 import Image from "next/image";
-import avatar from "../../public/assets/avatar.png"
+import avatar from "../../public/assests/avatar.png";
 import { useSession } from "next-auth/react";
-import { useLogoutQuery, useSocialAuthMutation } from "@/redux/features/auth/authApi";
-import toast from "react-hot-toast";
+import { useLogOutQuery, useSocialAuthMutation } from "@/redux/features/auth/authApi";
+import { toast } from "react-hot-toast";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import Loader from "./Loader/Loader";
 
 type Props = {
   open: boolean;
@@ -26,39 +27,40 @@ type Props = {
 const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   const [active, setActive] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
-  const {user} = useSelector((state:any) => state.auth)
-  const {data} = useSession()
-  const [socialAuth, {isSuccess,error}] = useSocialAuthMutation()
-
-  const [logout, setLogout] = useState(false)
-
-  const {} = useLogoutQuery(undefined, {
-    skip: !logout ? true : false
-  })
+  const {data:userData,isLoading,refetch} = useLoadUserQuery(undefined,{});
+  const { data } = useSession();
+  const [socialAuth, { isSuccess, error }] = useSocialAuthMutation();
+  const [logout, setLogout] = useState(false);
+  const {} = useLogOutQuery(undefined, {
+    skip: !logout ? true : false,
+  });
 
   useEffect(() => {
-    if(data === null){
-      if(isSuccess){
-        toast.success("Login Successfully!")
+    if(!isLoading){
+      if (!userData) {
+        if (data) {
+          socialAuth({
+            email: data?.user?.email,
+            name: data?.user?.name,
+            avatar: data.user?.image,
+          });
+          refetch();
+        }
+      }
+      if(data === null){
+        if(isSuccess){
+          toast.success("Login Successfully");
+        }
+      }
+      if(data === null && !isLoading && !userData){
+          setLogout(true);
       }
     }
-    if(data === null){
-      setLogout(true)
-    }
-    if(!user){
-      if(data){
-        socialAuth({
-          email: data?.user?.email,
-          name: data?.user?.name,
-          avatar: data?.user?.image
-        })
-      }
-    }
-  }, [data, user])
+  }, [data, userData,isLoading]);
 
   if (typeof window !== "undefined") {
     window.addEventListener("scroll", () => {
-      if (window.scrollY > 80) {
+      if (window.scrollY > 85) {
         setActive(true);
       } else {
         setActive(false);
@@ -75,11 +77,16 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
   };
 
   return (
-    <div className="w-full relative">
+   <>
+   {
+    isLoading ? (
+      <Loader />
+    ) : (
+      <div className="w-full relative">
       <div
         className={`${
           active
-            ? "dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500"
+            ? "dark:bg-opacity-50 bg-white dark:bg-gradient-to-b dark:from-gray-900 dark:to-black fixed top-0 left-0 w-full h-[80px] z-[80] border-b dark:border-[#ffffff1c] shadow-xl transition duration-500"
             : "w-full border-b dark:border-[#ffffff1c] h-[80px] z-[80] dark:shadow"
         }`}
       >
@@ -104,19 +111,24 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
                   onClick={() => setOpenSidebar(true)}
                 />
               </div>
-              {
-                user ? (
-                  <Link href={"/profile"}>
-                    <Image src={user.avatar ? user.avatar.url : avatar} alt="" className="w-[30px] h-[30px] rounded-full cursor-pointer" width={30} height={30} style={{border: activeItem === 5 ? "2px solid #37a39a" : "none"}} />
-                  </Link>
-                ) : (
-                  <HiOutlineUserCircle
-                size={25}
-                className="cursor-pointer dark:text-white text-black hidden 800px:block"
-                onClick={() => setOpen(true)}
-              />
-                )
-              }
+              {userData ? (
+                <Link href={"/profile"}>
+                  <Image
+                    src={userData?.user.avatar ? userData.user.avatar.url : avatar}
+                    alt=""
+                    width={30}
+                    height={30}
+                    className="w-[30px] h-[30px] rounded-full cursor-pointer"
+                    style={{border: activeItem === 5 ? "2px solid #37a39a" : "none"}}
+                  />
+                </Link>
+              ) : (
+                <HiOutlineUserCircle
+                  size={25}
+                  className="hidden 800px:block cursor-pointer dark:text-white text-black"
+                  onClick={() => setOpen(true)}
+                />
+              )}
             </div>
           </div>
         </div>
@@ -124,21 +136,34 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         {/* mobile sidebar */}
         {openSidebar && (
           <div
-            className="fixed w-full h-screen top-0 left-0 z-[99999] dark:bg-[unset] bg-[#000024]"
+            className="fixed w-full h-screen top-0 left-0 z-[99999] dark:bg-[unset] bg-[#00000024]"
             onClick={handleClose}
             id="screen"
           >
             <div className="w-[70%] fixed z-[999999999] h-screen bg-white dark:bg-slate-900 dark:bg-opacity-90 top-0 right-0">
               <NavItems activeItem={activeItem} isMobile={true} />
-              <HiOutlineUserCircle
-                size={25}
-                className="cursor-pointer dark:text-white text-black ml-5 my-2"
-                onClick={() => setOpen(true)}
-              />
+              {userData?.user ? (
+                <Link href={"/profile"}>
+                  <Image
+                    src={userData?.user.avatar ? userData.user.avatar.url : avatar}
+                    alt=""
+                    width={30}
+                    height={30}
+                    className="w-[30px] h-[30px] rounded-full ml-[20px] cursor-pointer"
+                    style={{border: activeItem === 5 ? "2px solid #37a39a" : "none"}}
+                  />
+                </Link>
+              ) : (
+                <HiOutlineUserCircle
+                  size={25}
+                  className="hidden 800px:block cursor-pointer dark:text-white text-black"
+                  onClick={() => setOpen(true)}
+                />
+              )}
               <br />
               <br />
               <p className="text-[16px] px-2 pl-5 text-black dark:text-white">
-                Copyright &copy; 2023 Aodemy
+                Copyright © 2023 ELearning
               </p>
             </div>
           </div>
@@ -153,10 +178,12 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               setRoute={setRoute}
               activeItem={activeItem}
               component={Login}
+              refetch={refetch}
             />
           )}
         </>
       )}
+
       {route === "Sign-Up" && (
         <>
           {open && (
@@ -170,6 +197,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
           )}
         </>
       )}
+
       {route === "Verification" && (
         <>
           {open && (
@@ -184,6 +212,9 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
         </>
       )}
     </div>
+    )
+   }
+   </>
   );
 };
 

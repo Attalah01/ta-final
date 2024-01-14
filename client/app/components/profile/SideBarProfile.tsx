@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React, { FC } from "react";
-import avatarDefault from "../../../public/assets/avatar.png";
+import avatarDefault from "../../../public/assests/avatar.png";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { SiCoursera } from "react-icons/si";
 import { AiOutlineLogout } from "react-icons/ai";
@@ -22,6 +22,7 @@ const SideBarProfile: FC<Props> = ({
   setActive,
   logOutHandler,
 }) => {
+  console.log('this is the role',user)
   return (
     <div className="w-full">
       <div
@@ -35,9 +36,9 @@ const SideBarProfile: FC<Props> = ({
             user.avatar || avatar ? user.avatar.url || avatar : avatarDefault
           }
           alt=""
-          className="w-[20px] h-[20px] 800px:w-[30px] 800px:h-[30px] cursor-pointer rounded-full"
           width={20}
           height={20}
+          className="w-[20px] h-[20px] 800px:w-[30px] 800px:h-[30px] cursor-pointer rounded-full"
         />
         <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
           My Account
@@ -49,7 +50,7 @@ const SideBarProfile: FC<Props> = ({
         }`}
         onClick={() => setActive(2)}
       >
-        <RiLockPasswordLine size={20} className="fill-black dark:fill-white" />
+        <RiLockPasswordLine size={20} className="dark:text-white text-black"  />
         <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
           Change Password
         </h5>
@@ -60,22 +61,19 @@ const SideBarProfile: FC<Props> = ({
         }`}
         onClick={() => setActive(3)}
       >
-        <SiCoursera size={20} className="fill-black dark:fill-white" />
+        <SiCoursera size={20} className="dark:text-white text-black"  />
         <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
           Enrolled Courses
         </h5>
       </div>
-      {user?.role === "admin" && (
+      {user.role === "admin" && (
         <Link
           className={`w-full flex items-center px-3 py-4 cursor-pointer ${
             active === 6 ? "dark:bg-slate-800 bg-white" : "bg-transparent"
           }`}
           href={"/admin"}
         >
-          <MdOutlineAdminPanelSettings
-            size={20}
-            className="fill-black dark:fill-white"
-          />
+          <MdOutlineAdminPanelSettings size={20} className="dark:text-white text-black"  />
           <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
             Admin Dashboard
           </h5>
@@ -87,7 +85,7 @@ const SideBarProfile: FC<Props> = ({
         }`}
         onClick={() => logOutHandler()}
       >
-        <AiOutlineLogout size={20} className="fill-black dark:fill-white" />
+        <AiOutlineLogout size={20} className="dark:text-white text-black" />
         <h5 className="pl-2 800px:block hidden font-Poppins dark:text-white text-black">
           Log Out
         </h5>
