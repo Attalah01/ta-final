@@ -23,7 +23,7 @@ const Footer = (props: Props) => {
               </li>
               <li>
                 <Link
-                  href="/privacy-policy"
+                  href="/policy"
                   className="text-base text-black dark:text-gray-300 dark:hover:text-white"
                 >
                   Privacy Policy
@@ -58,14 +58,14 @@ const Footer = (props: Props) => {
                   My Account
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link
                   href="/course-dashboard"
                   className="text-base text-black dark:text-gray-300 dark:hover:text-white"
                 >
                   Course Dashboard
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
           <div className="space-y-3">
@@ -97,20 +97,15 @@ const Footer = (props: Props) => {
               </li>
             </ul>
           </div>
-          <div>
-            <h3 className="text-[20px] font-[600] text-black dark:text-white pb-3">Contact Info</h3>
-            <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2">
-            Call Us: 1-885-665-2022
-            </p>
-           
-            <p className="text-base text-black dark:text-gray-300 dark:hover:text-white pb-2">
-            Address: +7011 Vermont Ave, Los Angeles, CA 90044
-            </p>
-         
-            <p className="text-base text-black dark:text-gray-300 dark:hover:text-white  pb-2">
-            Mail Us: hello@elearning.com
-            </p>
-            
+          <div className='space-y-3'>
+            <h3 className="text-[20px] font-[600] text-black dark:text-white">Contact Info</h3>
+            <ul className='space-y-4'>
+              <li>
+                <Link href="/contact" className='text-base text-black dark:text-gray-300 dark:hover:text-white'>
+                  Contact us
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
         <br />

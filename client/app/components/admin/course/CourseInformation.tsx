@@ -174,10 +174,10 @@ const CourseInformation: FC<Props> = ({
                 setCourseInfo({ ...courseInfo, categories: e.target.value })
               }
             >
-              <option value="">Select Category</option>
+              <option value="" className="dark:bg-black">Select Category</option>
               {categories &&
                 categories.map((item: any) => (
-                  <option value={item.title} key={item._id}>
+                  <option value={item.title} key={item._id} className="dark:bg-black">
                     {item.title}
                   </option>
                 ))}
