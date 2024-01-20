@@ -15,8 +15,8 @@ const page = ({params}:any) => {
     <div>
       <AdminProtected>
         <Heading
-         title="Elearning - Admin"
-         description="ELearning is a platform for students to learn and get help from teachers"
+         title="Aodemy - Admin"
+         description="Aodemy is a platform for students to learn and get help from teachers"
          keywords="Prograaming,MERN,Redux,Machine Learning"
         />
         <div className="flex">
