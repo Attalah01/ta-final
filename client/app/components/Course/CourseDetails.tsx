@@ -238,10 +238,11 @@ const CourseDetails = ({
                   </Link>
                 ) : (
                   <div
-                    className={`${styles.button} !w-[180px] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
+                    className={`${styles.button} !w-[auto] my-3 font-Poppins cursor-pointer !bg-[crimson]`}
                     onClick={handleOrder}
                   >
-                    Buy Now {data.price}$
+                    {/* Buy Now {data.price}k */}
+                    Buy Now
                   </div>
                 )}
               </div>

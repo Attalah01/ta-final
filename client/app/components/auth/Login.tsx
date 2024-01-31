@@ -55,7 +55,7 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
 
   return (
     <div className="w-full">
-      <h1 className={`${styles.title}`}>Login with ELearning</h1>
+      <h1 className={`${styles.title}`}>Login with Aodemy</h1>
       <form onSubmit={handleSubmit}>
         <label className={`${styles.label}`} htmlFor="email">
           Enter your Email
@@ -91,13 +91,13 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
           />
           {!show ? (
             <AiOutlineEyeInvisible
-              className="absolute bottom-3 right-2 z-1 cursor-pointer"
+              className="absolute bottom-3 right-2 z-1 cursor-pointer dark:text-white"
               size={20}
               onClick={() => setShow(true)}
             />
           ) : (
             <AiOutlineEye
-              className="absolute bottom-3 right-2 z-1 cursor-pointer"
+              className="absolute bottom-3 right-2 z-1 cursor-pointer dark:text-white"
               size={20}
               onClick={() => setShow(false)}
             />
@@ -119,7 +119,7 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
           />
           <AiFillGithub size={30} className="cursor-pointer ml-2" onClick={() => signIn("github")} />
         </div>
-        <h5 className="text-center pt-4 font-Poppins text-[14px]">
+        <h5 className="text-center pt-4 font-Poppins text-[14px] dark:text-white">
           Not have any account?{" "}
           <span
             className="text-[#2190ff] pl-1 cursor-pointer"
