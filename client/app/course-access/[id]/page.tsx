@@ -1,6 +1,6 @@
 'use client'
-import CourseContent from "@/app/components/Course/CourseContent";
-import Loader from "@/app/components/Loader/Loader";
+import CourseContent from "../../../app/components/Course/CourseContent";
+import Loader from "../../../app/components/loader/Loader";
 import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 import { redirect } from "next/navigation";
 import React, { useEffect } from "react";

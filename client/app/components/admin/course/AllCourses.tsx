@@ -7,10 +7,10 @@ import { FiEdit2 } from "react-icons/fi";
 import {
   useDeleteCourseMutation,
   useGetAllCoursesQuery,
-} from "@/redux/features/courses/coursesApi";
-import Loader from "../../Loader/Loader";
+} from "../../../../redux/features/courses/coursesApi";
+import Loader from "../../loader/Loader";
 import { format } from "timeago.js";
-import { styles } from "@/app/styles/style";
+import { styles } from "../../../../app/styles/style";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
 

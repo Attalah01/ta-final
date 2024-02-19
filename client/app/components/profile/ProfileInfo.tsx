@@ -6,8 +6,8 @@ import avatarIcon from "../../../public/assests/avatar.png";
 import {
   useEditProfileMutation,
   useUpdateAvatarMutation,
-} from "@/redux/features/user/userApi";
-import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+} from "../../../redux/features/user/userApi";
+import { useLoadUserQuery } from "../../../redux/features/api/apiSlice";
 import { toast } from "react-hot-toast";
 
 type Props = {

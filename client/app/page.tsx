@@ -2,9 +2,9 @@
 import React, { FC, useEffect, useState } from "react";
 import Heading from "./utils/Heading";
 import Header from "./components/Header";
-import Hero from "./components/Route/Hero";
-import Courses from "./components/Route/Courses";
-import Reviews from "./components/Route/Reviews";
+import Hero from "./components/route/Hero";
+import Courses from "./components/route/Courses";
+import Reviews from "./components/route/Reviews";
 import FAQ from "./components/FAQ/FAQ";
 import Footer from "./components/Footer";
 

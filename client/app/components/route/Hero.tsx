@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { FC, useState } from "react";
 import { BiSearch } from "react-icons/bi";
-import Loader from "../Loader/Loader";
+import Loader from "../loader/Loader";
 import { useRouter } from "next/navigation";
 
 type Props = {};

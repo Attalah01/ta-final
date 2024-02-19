@@ -1,14 +1,14 @@
-import { styles } from "@/app/styles/style";
+import { styles } from "../../../../app/styles/style";
 import {
   useEditLayoutMutation,
   useGetHeroDataQuery,
-} from "@/redux/features/layout/layoutApi";
+} from "../../../../redux/features/layout/layoutApi";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineDelete } from "react-icons/ai";
 import { HiMinus, HiPlus } from "react-icons/hi";
 import { IoMdAddCircleOutline } from "react-icons/io";
-import Loader from "../../Loader/Loader";
+import Loader from "../../loader/Loader";
 
 type Props = {};
 

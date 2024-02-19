@@ -9,9 +9,10 @@ import {
 } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { styles } from "../../../app/styles/style";
-import { useLoginMutation } from "@/redux/features/auth/authApi";
+import { useLoginMutation } from "../../../redux/features/auth/authApi";
 import { toast } from "react-hot-toast";
 import {signIn} from "next-auth/react";
+import Link from "next/link";
 
 type Props = {
   setRoute: (route: string) => void;
@@ -105,6 +106,9 @@ const Login: FC<Props> = ({ setRoute, setOpen,refetch }) => {
           {errors.password && touched.password && (
             <span className="text-red-500 pt-2 block">{errors.password}</span>
           )}
+        </div>
+        <div className="flex justify-end">
+          <Link href={"/send-email"} className="text-[#2190ff] cursor-pointer">Forgot Password?</Link>
         </div>
         <div className="w-full mt-5">
           <input type="submit" value="Login" className={`${styles.button}`} />

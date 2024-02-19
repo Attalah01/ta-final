@@ -1,10 +1,10 @@
 'use client'
 import React from 'react'
-import AdminSidebar from "../../components/Admin/sidebar/AdminSidebar";
+import AdminSidebar from "../../components/admin/sidebar/AdminSidebar";
 import Heading from '../../../app/utils/Heading';
-import CourseAnalytics from "../../components/Admin/Analytics/CourseAnalytics";
-import DashboardHeader from '../../../app/components/Admin/DashboardHeader';
-import AdminProtected from '@/app/hooks/adminProtected';
+import CourseAnalytics from "../../components/admin/Analytics/CourseAnalytics";
+import DashboardHeader from '../../../app/components/admin/DashboardHeader';
+import AdminProtected from '../../../app/hooks/adminProtected';
 
 type Props = {}
 

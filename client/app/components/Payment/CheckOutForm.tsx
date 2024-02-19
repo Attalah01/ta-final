@@ -1,6 +1,6 @@
-import { styles } from "@/app/styles/style";
-import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
-import { useCreateOrderMutation } from "@/redux/features/orders/ordersApi";
+import { styles } from "../../../app/styles/style";
+// import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import { useCreateOrderMutation } from "../../../redux/features/orders/ordersApi";
 import {
   LinkAuthenticationElement,
   PaymentElement,

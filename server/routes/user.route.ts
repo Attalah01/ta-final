@@ -6,7 +6,9 @@ import {
   getUserInfo,
   loginUser,
   logoutUser,
+  newPassword,
   registrationUser,
+  sendResetPasswordEmail,
   socialAuth,
   updatePassword,
   updateProfilePicture,
@@ -54,5 +56,9 @@ userRouter.delete(
   authorizeRoles("admin"),
   deleteUser
 );
+
+userRouter.post("/reset-password", sendResetPasswordEmail)
+
+userRouter.post("/new-password", newPassword)
 
 export default userRouter;

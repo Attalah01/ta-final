@@ -6,7 +6,7 @@ import { signOut } from "next-auth/react";
 import ProfileInfo from "./ProfileInfo";
 import ChangePassword from "./ChangePassword";
 import CourseCard from "../Course/CourseCard";
-import { useGetUsersAllCoursesQuery } from "@/redux/features/courses/coursesApi";
+import { useGetUsersAllCoursesQuery } from "../../../redux/features/courses/coursesApi";
 import { redirect } from "next/navigation";
 
 type Props = {

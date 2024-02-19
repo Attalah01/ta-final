@@ -1,10 +1,10 @@
 'use client'
-import DashboardHero from '@/app/components/Admin/DashboardHero'
+import DashboardHero from '@/app/components/admin/DashboardHero'
 import AdminProtected from '@/app/hooks/adminProtected'
-import Heading from '@/app/utils/Heading'
+import Heading from '../../../app/utils/Heading'
 import React from 'react'
-import AdminSidebar from "../../components/Admin/sidebar/AdminSidebar";
-import AllCourses from "../../components/Admin/Course/AllCourses";
+import AdminSidebar from "../../components/admin/sidebar/AdminSidebar";
+import AllCourses from "../../components/admin/course/AllCourses";
 
 type Props = {}
 

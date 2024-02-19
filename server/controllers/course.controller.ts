@@ -45,7 +45,7 @@ export const editCourse = CatchAsyncError(
 
       const courseId = req.params.id;
 
-      const courseData = await CourseModel.findById(courseId) as any;
+      const courseData = (await CourseModel.findById(courseId)) as any;
 
       if (thumbnail && !thumbnail.startsWith("https")) {
         await cloudinary.v2.uploader.destroy(courseData.thumbnail.public_id);
@@ -75,6 +75,8 @@ export const editCourse = CatchAsyncError(
         { new: true }
       );
 
+      await redis.set(courseId, JSON.stringify(course)); // 7days
+
       res.status(201).json({
         success: true,
         course,
@@ -93,8 +95,20 @@ export const getSingleCourse = CatchAsyncError(
 
       const isCacheExist = await redis.get(courseId);
 
+      const getCourse = await CourseModel.findById(req.params.id).select(
+        "-courseData.videoUrl -courseData.suggestion -courseData.questions -courseData.links"
+      );
+
+      const updatedCache = await redis.set(courseId, JSON.stringify(getCourse));
+
       if (isCacheExist) {
         const course = JSON.parse(isCacheExist);
+        res.status(200).json({
+          success: true,
+          course,
+        });
+      } else if (updatedCache) {
+        const course = JSON.parse(updatedCache);
         res.status(200).json({
           success: true,
           course,
@@ -367,7 +381,6 @@ export const addReview = CatchAsyncError(
         message: `${req.user?.name} has given a review in ${course?.name}`,
       });
 
-
       res.status(200).json({
         success: true,
         course,
@@ -415,7 +428,7 @@ export const addReplyToReview = CatchAsyncError(
       }
 
       review.commentReplies?.push(replyData);
-      
+
       await course?.save();
 
       await redis.set(courseId, JSON.stringify(course), "EX", 604800); // 7days

@@ -1,9 +1,9 @@
 "use client";
-import { ThemeSwitcher } from "@/app/utils/ThemeSwitcher";
+import { ThemeSwitcher } from "../../../app/utils/ThemeSwitcher";
 import {
   useGetAllNotificationsQuery,
   useUpdateNotificationStatusMutation,
-} from "@/redux/features/notifications/notificationsApi";
+} from "../../../redux/features/notifications/notificationsApi";
 import React, { FC, useEffect, useState } from "react";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import socketIO from "socket.io-client";

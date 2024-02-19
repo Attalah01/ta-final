@@ -8,9 +8,9 @@ import {
   YAxis,
   LabelList,
 } from "recharts";
-import Loader from "../../Loader/Loader";
-import { useGetCoursesAnalyticsQuery } from "@/redux/features/analytics/analyticsApi";
-import { styles } from "@/app/styles/style";
+import Loader from "../../loader/Loader";
+import { useGetCoursesAnalyticsQuery } from "../../../../redux/features/analytics/analyticsApi";
+import { styles } from "../../../../app/styles/style";
 
 type Props = {};
 

@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Box } from "@mui/material";
 import { useTheme } from "next-themes";
-import { useGetAllCoursesQuery } from "@/redux/features/courses/coursesApi";
-import Loader from "../../Loader/Loader";
+import { useGetAllCoursesQuery } from "../../../../redux/features/courses/coursesApi";
+import Loader from "../../loader/Loader";
 import { format } from "timeago.js";
-import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";
-import { useGetAllUsersQuery } from "@/redux/features/user/userApi";
+import { useGetAllOrdersQuery } from "../../../../redux/features/orders/ordersApi";
+import { useGetAllUsersQuery } from "../../../../redux/features/user/userApi";
 import { AiOutlineMail } from "react-icons/ai";
 
 type Props = {
@@ -142,7 +142,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
                   theme === "dark" ? `#b7ebde !important` : `#000 !important`,
               },
               "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-                color: `#fff !important`,
+                color: theme === "dark" ? `#fff !important` : `#000 !important`,
               },
             }}
           >
@@ -150,7 +150,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
               checkboxSelection={isDashboard ? false : true}
               rows={rows}
               columns={columns}
-              components={isDashboard ? {} : { Toolbar: GridToolbar }}
+              slots={isDashboard ? {} : { toolbar: GridToolbar }}
             />
           </Box>
         </Box>

@@ -1,16 +1,16 @@
-import { useGetCourseDetailsQuery } from "@/redux/features/courses/coursesApi";
+import { useGetCourseDetailsQuery } from "../../../redux/features/courses/coursesApi";
 import React, { useEffect, useState } from "react";
-import Loader from "../Loader/Loader";
-import Heading from "@/app/utils/Heading";
+import Loader from "../loader/Loader";
+import Heading from "../../../app/utils/Heading";
 import Header from "../Header";
 import Footer from "../Footer";
 import CourseDetails from "./CourseDetails";
 import {
   useCreatePaymentIntentMutation,
   useGetStripePublishablekeyQuery,
-} from "@/redux/features/orders/ordersApi";
+} from "../../../redux/features/orders/ordersApi";
 import { loadStripe } from "@stripe/stripe-js";
-import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
+import { useLoadUserQuery } from "../../../redux/features/api/apiSlice";
 
 type Props = {
   id: string;
@@ -51,9 +51,9 @@ const CourseDetailsPage = ({ id }: Props) => {
       ) : (
         <div>
           <Heading
-            title={data.course.name + " - ELearning"}
+            title={data?.course?.name + " - Aodemy"}
             description={
-              "ELearning is a programming community which is developed by shahriar sajeeb for helping programmers"
+              "Aodemy is a programming community which is developed by shahriar sajeeb for helping programmers"
             }
             keywords={data?.course?.tags}
           />
@@ -66,7 +66,7 @@ const CourseDetailsPage = ({ id }: Props) => {
           />
           {stripePromise && (
             <CourseDetails
-              data={data.course}
+              data={data?.course}
               stripePromise={stripePromise}
               clientSecret={clientSecret}
               setRoute={setRoute}

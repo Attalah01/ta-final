@@ -19,6 +19,7 @@ import {
   updateUserRoleService,
 } from "../services/user.service";
 import cloudinary from "cloudinary";
+import bcrypt from "bcryptjs";
 
 // register user
 interface IRegistrationBody {
@@ -134,6 +135,7 @@ export const activateUser = CatchAsyncError(
 
       res.status(201).json({
         success: true,
+        user,
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
@@ -148,10 +150,8 @@ interface ILoginRequest {
 }
 
 export const loginUser = CatchAsyncError(
-  
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      
       const { email, password } = req.body as ILoginRequest;
 
       if (!email || !password) {
@@ -170,7 +170,6 @@ export const loginUser = CatchAsyncError(
       }
       sendToken(user, 200, res);
     } catch (error: any) {
-
       return next(new ErrorHandler(error.message, 400));
     }
   }
@@ -209,13 +208,13 @@ export const updateAccessToken = CatchAsyncError(
         return next(new ErrorHandler(message, 400));
       }
       const session = await redis.get(decoded.id as string);
-         
+
       if (!session) {
         return next(
           new ErrorHandler("Please login for access this resources!", 400)
         );
       }
-      
+
       const user = JSON.parse(session);
 
       const accessToken = jwt.sign(
@@ -359,6 +358,52 @@ export const updatePassword = CatchAsyncError(
   }
 );
 
+interface INewPassword {
+  email?: string;
+  newPassword?: string;
+}
+
+export const newPassword = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email, newPassword } = req.body as INewPassword;
+
+      if (!newPassword) {
+        return next(new ErrorHandler("Please enter a new password", 400));
+      }
+
+      const user = await userModel.findOne({ email }).select("+password");
+
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      if (typeof user.password !== 'string') {
+        return next(new ErrorHandler("Invalid password", 500));
+      }
+
+      const isPasswordMatch = await bcrypt.compare(newPassword, user.password);
+
+      if (isPasswordMatch) {
+        return next(new ErrorHandler("Password already taken", 400));
+      }
+
+      user.password = newPassword;
+
+      await user.save();
+
+      await redis.set(req.user?._id, JSON.stringify(user));
+
+      res.status(201).json({
+        success: true,
+        user,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
 interface IUpdateProfilePicture {
   avatar: string;
 }
@@ -432,7 +477,7 @@ export const updateUserRole = CatchAsyncError(
       const isUserExist = await userModel.findOne({ email });
       if (isUserExist) {
         const id = isUserExist._id;
-        updateUserRoleService(res,id, role);
+        updateUserRoleService(res, id, role);
       } else {
         res.status(400).json({
           success: false,
@@ -470,3 +515,57 @@ export const deleteUser = CatchAsyncError(
     }
   }
 );
+
+interface IResetPassword {
+  email?: string;
+}
+
+export const sendResetPasswordEmail = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { email } = req.body as IResetPassword;
+      const user = await userModel.findOne({ email });
+
+      if (!user) {
+        return next(new ErrorHandler("User not found", 404));
+      }
+
+      // const resetToken = generateResetToken();
+
+      // user.resetPasswordToken = resetToken;
+      // user.resetPasswordExpire = Date.now() + 3600000;  // 1 hour
+      await user.save();
+
+      const html = await ejs.renderFile(
+        path.join(__dirname, "../mails/reset-password.ejs"),
+        // { resetToken },
+        { async: true }
+      );
+
+      try {
+        if (user) {
+          await sendMail({
+            email: user.email,
+            subject: "Reset Password",
+            template: "reset-password.ejs",
+            data: {},
+          });
+        }
+      } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500));
+      }
+
+      res.status(200).json({
+        success: true,
+      });
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  }
+);
+
+// const generateResetToken = () => {
+//   return (
+//     Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2)
+//   );
+// };

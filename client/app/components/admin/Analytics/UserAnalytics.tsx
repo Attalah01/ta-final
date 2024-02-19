@@ -1,5 +1,5 @@
-import { styles } from "@/app/styles/style";
-import { useGetUsersAnalyticsQuery } from "@/redux/features/analytics/analyticsApi";
+import { styles } from "../../../../app/styles/style";
+import { useGetUsersAnalyticsQuery } from "../../../../redux/features/analytics/analyticsApi";
 import React, { FC } from "react";
 import {
   AreaChart,
@@ -9,7 +9,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import Loader from "../../Loader/Loader"
+import Loader from "../../loader/Loader"
 
 type Props = {
   isDashboard?: boolean;

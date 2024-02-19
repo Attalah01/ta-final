@@ -1,12 +1,12 @@
-import { styles } from "@/app/styles/style";
-import CoursePlayer from "@/app/utils/CoursePlayer";
+import { styles } from "../../../app/styles/style";
+import CoursePlayer from "../../../app/utils/CoursePlayer";
 import {
   useAddAnswerInQuestionMutation,
   useAddNewQuestionMutation,
   useAddReplyInReviewMutation,
   useAddReviewInCourseMutation,
   useGetCourseDetailsQuery,
-} from "@/redux/features/courses/coursesApi";
+} from "../../../redux/features/courses/coursesApi";
 import Image from "next/image";
 import { format } from "timeago.js";
 import React, { useEffect, useState } from "react";
@@ -21,6 +21,8 @@ import { BiMessage } from "react-icons/bi";
 import { VscVerifiedFilled } from "react-icons/vsc";
 import Ratings from "@/app/utils/Ratings";
 import socketIO from "socket.io-client";
+import { IoMdSend } from "react-icons/io";
+
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
 const socketId = socketIO(ENDPOINT, { transports: ["websocket"] });
 
@@ -648,7 +650,7 @@ const CommentItem = ({
                   onClick={handleAnswerSubmit}
                   disabled={answer === "" || answerCreationLoading}
                 >
-                  Submit
+                  <IoMdSend size={20} />
                 </button>
               </div>
               <br />

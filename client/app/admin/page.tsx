@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import Heading from "../utils/Heading";
-import AdminSidebar from "../components/Admin/sidebar/AdminSidebar";
+import AdminSidebar from "../components/admin/sidebar/AdminSidebar";
 import AdminProtected from "../hooks/adminProtected";
-import DashboardHero from "../components/Admin/DashboardHero";
+import DashboardHero from "../components/admin/DashboardHero";
 
 type Props = {};
 

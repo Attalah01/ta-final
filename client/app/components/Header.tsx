@@ -5,16 +5,16 @@ import NavItems from "../utils/NavItems";
 import { ThemeSwitcher } from "../utils/ThemeSwitcher";
 import { HiOutlineMenuAlt3, HiOutlineUserCircle } from "react-icons/hi";
 import CustomModal from "../utils/CustomModal";
-import Login from "../components/Auth/Login";
-import SignUp from "../components/Auth/SignUp";
-import Verification from "../components/Auth/Verification";
+import Login from "../components/auth/Login";
+import SignUp from "../components/auth/SignUp";
+import Verification from "../components/auth/Verification";
 import Image from "next/image";
 import avatar from "../../public/assests/avatar.png";
 import { useSession } from "next-auth/react";
-import { useLogOutQuery, useSocialAuthMutation } from "@/redux/features/auth/authApi";
+import { useLogOutQuery, useSocialAuthMutation } from "../../redux/features/auth/authApi";
 import { toast } from "react-hot-toast";
-import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
-import Loader from "./Loader/Loader";
+import { useLoadUserQuery } from "../../redux/features/api/apiSlice";
+import Loader from "./loader/Loader";
 
 type Props = {
   open: boolean;
@@ -125,7 +125,7 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               ) : (
                 <HiOutlineUserCircle
                   size={25}
-                  className="hidden 800px:block cursor-pointer dark:text-white text-black"
+                  className="800px:block cursor-pointer dark:text-white text-black"
                   onClick={() => setOpen(true)}
                 />
               )}

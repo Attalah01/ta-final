@@ -26,7 +26,7 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useLogOutQuery } from "@/redux/features/auth/authApi";
+import { useLogOutQuery } from "../../../../redux/features/auth/authApi";
 import { signOut } from "next-auth/react";
 import { redirect } from "next/navigation";
 

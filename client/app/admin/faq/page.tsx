@@ -1,10 +1,10 @@
 "use client";
-import DashboardHero from "@/app/components/Admin/DashboardHero";
-import AdminProtected from "@/app/hooks/adminProtected";
-import Heading from "@/app/utils/Heading";
+import DashboardHero from "../../../app/components/admin/DashboardHero";
+import AdminProtected from "../../../app/hooks/adminProtected";
+import Heading from "../../../app/utils/Heading";
 import React from "react";
-import AdminSidebar from "../../components/Admin/sidebar/AdminSidebar";
-import EditFaq from "../../components/Admin/Customization/EditFaq";
+import AdminSidebar from "../../components/admin/sidebar/AdminSidebar";
+import EditFaq from "../../components/admin/customization/EditFaq";
 
 type Props = {};
 
