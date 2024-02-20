@@ -15,6 +15,7 @@ import { useLogOutQuery, useSocialAuthMutation } from "../../redux/features/auth
 import { toast } from "react-hot-toast";
 import { useLoadUserQuery } from "../../redux/features/api/apiSlice";
 import Loader from "./loader/Loader";
+import Reset from "../components/auth/Reset";
 
 type Props = {
   open: boolean;
@@ -207,6 +208,19 @@ const Header: FC<Props> = ({ activeItem, setOpen, route, open, setRoute }) => {
               setRoute={setRoute}
               activeItem={activeItem}
               component={Verification}
+            />
+          )}
+        </>
+      )}
+      {route === "Reset" && (
+        <>
+          {open && (
+            <CustomModal
+              open={open}
+              setOpen={setOpen}
+              setRoute={setRoute}
+              activeItem={activeItem}
+              component={Reset}
             />
           )}
         </>

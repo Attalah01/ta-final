@@ -1,14 +1,17 @@
 'use client'
 import { redirect } from 'next/navigation';
-import { useSendResetPasswordEmailMutation } from '../../redux/features/user/userApi'
-import React, { useEffect, useState } from 'react'
+import { useSendResetPasswordEmailMutation } from '../../../redux/features/user/userApi'
+import React, { FC, useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import { FaArrowLeft } from "react-icons/fa";
+import { styles } from '@/app/styles/style';
 
 type Props = {
+  setRoute: (route: string) => void;
+  setOpen: (open: boolean) => void;
 }
 
-const page = (props: Props) => {
+const Reset:FC<Props> = ({setRoute, setOpen}) => {
 
   const [email, setEmail] = useState("")
   const [data, {isSuccess, error}] = useSendResetPasswordEmailMutation()
@@ -43,10 +46,9 @@ const page = (props: Props) => {
     // }
   }, [isSuccess, error])
 
-  const handleBackToHome = () => {
-    window.history.back()
-    setLoading(true)
-  };
+//   const handleBackToHome = () => {
+//     redirect("/")
+//   };
 
   return (
     // <div className="max-w-md mx-auto mt-8 px-4 py-6 bg-white shadow-md rounded-md">
@@ -73,42 +75,49 @@ const page = (props: Props) => {
     //   </form>
     // </div>
 
-    <div className="flex justify-center items-center h-screen">
-      <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md relative">
-        <button
+    <div className="w-full">
+      <div className="rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md relative">
+        {/* <button
           onClick={handleBackToHome}
           className="absolute top-0 left-0 mt-4 ml-4 text-gray-500 hover:text-gray-700 focus:outline-none"
         >
           <FaArrowLeft size={20} />
-        </button>
+        </button> */}
         <div className="mb-6 text-center">
-          <h2 className="text-2xl">Reset Password</h2>
+          <h2 className="text-2xl text-black dark:text-white">Reset Password</h2>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            <label className="block text-gray-700 text-sm font-bold mb-2 dark:text-white" htmlFor="email">
               Email:
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="dark:bg-transparent shadow appearance-none border rounded w-full py-2 px-3 dark:text-white text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="email"
               type="email"
               value={email}
               onChange={handleEmailChange}
               required
+              placeholder='Enter your email'
             />
           </div>
           <button
-            className={`bg-blue-500 text-white font-bold py-2 px-4 rounded w-full ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`${styles.button} mt-5 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             type="submit"
             disabled={loading}
           >
             {loading ? 'Loading...' : 'Send Reset Password Email'}
           </button>
         </form>
+          <div
+            className={`${styles.button} mt-5 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={() => setRoute("Login")}
+          >
+            Back To Login
+          </div>
       </div>
     </div>
   )
 }
 
-export default page
+export default Reset
