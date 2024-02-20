@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 import { styles } from "../styles/style";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { redirect } from "next/navigation";
+import { FaArrowLeft } from "react-icons/fa";
+import Link from "next/link";
 
 
 type Props = {};
@@ -49,11 +51,14 @@ const page = (props: Props) => {
       });
 
       const { errors, touched, values, handleChange, handleSubmit } = formik;
-
-      console.log(handleSubmit)
   return (
-    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 w-full max-w-md">
+    <div className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[95%] m-auto  800px:w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none">
+      <div className="mb-6">
+        <Link href={"/"} className="text-gray-500 hover:text-gray-700 focus:outline-none flex justify-start">
+          <FaArrowLeft size={20} />
+        </Link>
         <h1 className={`${styles.title}`}>Reset Password</h1>
+        </div>
         <form onSubmit={handleSubmit}>
         <label className={`${styles.label}`} htmlFor="email">
           Enter your Email

@@ -1,7 +1,9 @@
+import { useLogOutQuery } from "@/redux/features/auth/authApi";
 import { styles } from "../../../app/styles/style";
 import { useUpdatePasswordMutation } from "../../../redux/features/user/userApi";
 import React, { FC, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import { signOut } from "next-auth/react";
 
 type Props = {};
 
@@ -10,6 +12,11 @@ const ChangePassword: FC<Props> = (props) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [updatePassword, { isSuccess, error }] = useUpdatePasswordMutation();
+  const [logout, setLogout] = useState(false)
+  const {} = useLogOutQuery(undefined, {
+    skip: !logout ? true : false,
+  });
+
 
   const passwordChangeHandler = async (e: any) => {
     e.preventDefault();
@@ -23,6 +30,8 @@ const ChangePassword: FC<Props> = (props) => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Password changed successfully");
+      signOut()
+      setLogout(true)
     }
     if (error) {
       if ("data" in error) {
