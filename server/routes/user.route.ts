@@ -59,6 +59,6 @@ userRouter.delete(
 
 userRouter.post("/reset-password", sendResetPasswordEmail)
 
-userRouter.post("/new-password", newPassword)
+userRouter.post("/new-password/:id/:token", newPassword)
 
 export default userRouter;

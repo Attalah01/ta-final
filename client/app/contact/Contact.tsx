@@ -10,9 +10,9 @@ const Contact = (props: Props) => {
           <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white font-Poppins">
             Visit Our Location
           </h2>
-          <p className="mt-4 text-lg text-gray-500 dark:text-gray-300">
+          {/* <p className="mt-4 text-lg text-gray-500 dark:text-gray-300">
             Lorem ipsum dolor sit amet consectetur adipisicing elit.
-          </p>
+          </p> */}
         </div>
         <div className="mt-16 lg:mt-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">

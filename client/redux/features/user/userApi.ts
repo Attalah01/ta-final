@@ -55,17 +55,17 @@ export const userApi = apiSlice.injectEndpoints({
     }),
     sendResetPasswordEmail: builder.mutation({
       query: ({email}) => ({
-        url: "reset-password",
+        url: `reset-password`,
         method: "POST",
         body: {email},
         credentials: "include" as const,
       })
     }),
     newPassword: builder.mutation({
-      query: ({email, newPassword}) => ({
-        url: "new-password",
+      query: ({password,id,token}) => ({
+        url: `new-password/${id}/${token}`,
         method: "POST",
-        body: {email, newPassword},
+        body: {password},
         credentials: "include" as const,
       })
     })

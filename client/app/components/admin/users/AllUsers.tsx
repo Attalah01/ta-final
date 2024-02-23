@@ -64,7 +64,7 @@ const AllCourses: FC<Props> = ({ isTeam }) => {
     { field: "name", headerName: "Name", flex: 0.5 },
     { field: "email", headerName: "Email", flex: 0.5 },
     { field: "role", headerName: "Role", flex: 0.5 },
-    { field: "courses", headerName: "Purchased Courses", flex: 0.5 },
+    // { field: "courses", headerName: "Purchased Courses", flex: 0.5 },
     { field: "created_at", headerName: "Joined At", flex: 0.5 },
     {
       field: " ",
@@ -117,7 +117,7 @@ const AllCourses: FC<Props> = ({ isTeam }) => {
           name: item.name,
           email: item.email,
           role: item.role,
-          courses: item.courses.length,
+          // courses: item.courses.length,
           created_at: format(item.createdAt),
         });
       });
@@ -129,7 +129,7 @@ const AllCourses: FC<Props> = ({ isTeam }) => {
           name: item.name,
           email: item.email,
           role: item.role,
-          courses: item.courses.length,
+          // courses: item.courses.length,
           created_at: format(item.createdAt),
         });
       });
@@ -153,10 +153,10 @@ const AllCourses: FC<Props> = ({ isTeam }) => {
           {isTeam && (
             <div className="w-full flex justify-end">
               <div
-                className={`${styles.button} !w-[200px] !rounded-[10px] dark:bg-[#57c7a3] !h-[35px] dark:border dark:border-[#ffffff6c]`}
+                className={`${styles.button} !w-[auto] !rounded-[10px] dark:bg-[#57c7a3] !h-[35px] dark:border dark:border-[#ffffff6c]`}
                 onClick={() => setActive(!active)}
               >
-                Add New Member
+                Edit Role
               </div>
             </div>
           )}
@@ -222,7 +222,7 @@ const AllCourses: FC<Props> = ({ isTeam }) => {
               aria-describedby="modal-modal-description"
             >
               <Box className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[450px] bg-white dark:bg-slate-900 rounded-[8px] shadow p-4 outline-none">
-                <h1 className={`${styles.title}`}>Add New Member</h1>
+                <h1 className={`${styles.title}`}>Edit Role</h1>
                 <div className="mt-4">
                   <input
                     type="email"

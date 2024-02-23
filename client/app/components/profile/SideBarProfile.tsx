@@ -22,12 +22,11 @@ const SideBarProfile: FC<Props> = ({
   setActive,
   logOutHandler,
 }) => {
-  console.log('this is the role',user)
   return (
     <div className="w-full">
       <div
         className={`w-full flex items-center px-3 py-4 cursor-pointer ${
-          active === 1 ? "dark:bg-slate-800 bg-white" : "bg-transparent"
+          active === 1 ? "dark:bg-slate-800 bg-gray-300" : "bg-transparent"
         }`}
         onClick={() => setActive(1)}
       >
@@ -46,7 +45,7 @@ const SideBarProfile: FC<Props> = ({
       </div>
       <div
         className={`w-full flex items-center px-3 py-4 cursor-pointer ${
-          active === 2 ? "dark:bg-slate-800 bg-white" : "bg-transparent"
+          active === 2 ? "dark:bg-slate-800 bg-gray-300" : "bg-transparent"
         }`}
         onClick={() => setActive(2)}
       >
@@ -57,7 +56,7 @@ const SideBarProfile: FC<Props> = ({
       </div>
       <div
         className={`w-full flex items-center px-3 py-4 cursor-pointer ${
-          active === 3 ? "dark:bg-slate-800 bg-white" : "bg-transparent"
+          active === 3 ? "dark:bg-slate-800 bg-gray-300" : "bg-transparent"
         }`}
         onClick={() => setActive(3)}
       >
@@ -69,7 +68,7 @@ const SideBarProfile: FC<Props> = ({
       {user.role === "admin" && (
         <Link
           className={`w-full flex items-center px-3 py-4 cursor-pointer ${
-            active === 6 ? "dark:bg-slate-800 bg-white" : "bg-transparent"
+            active === 6 ? "dark:bg-slate-800 bg-gray-300" : "bg-transparent"
           }`}
           href={"/admin"}
         >

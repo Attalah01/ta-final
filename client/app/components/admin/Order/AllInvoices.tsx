@@ -55,6 +55,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
     ...(isDashboard
       ? [{ field: "created_at", headerName: "Created At", flex: 0.5 }]
       : [
+        { field: "created_at", headerName: "Created At", flex: 0.5 },
           {
             field: " ",
             headerName: "Email",
@@ -83,7 +84,7 @@ const AllInvoices = ({ isDashboard }: Props) => {
         userEmail: item.userEmail,
         title: item.title,
         price: item.price,
-        created_at: format(item.createdAt),
+        created_at: isDashboard ? format(item.createdAt) : item.createdAt,
       });
     });
 

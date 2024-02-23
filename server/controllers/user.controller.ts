@@ -19,7 +19,7 @@ import {
   updateUserRoleService,
 } from "../services/user.service";
 import cloudinary from "cloudinary";
-import bcrypt from "bcryptjs";
+import bcrypt, { hash } from "bcryptjs";
 
 // register user
 interface IRegistrationBody {
@@ -359,45 +359,30 @@ export const updatePassword = CatchAsyncError(
 );
 
 interface INewPassword {
-  email?: string;
-  newPassword?: string;
+  id?: any;
+  token?:any
+  password?: any;
 }
 
 export const newPassword = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { email, newPassword } = req.body as INewPassword;
+      const { id, token } = req.params as INewPassword;
+      const {password} = req.body as INewPassword
 
-      if (!newPassword) {
-        return next(new ErrorHandler("Please enter a new password", 400));
-      }
-
-      const user = await userModel.findOne({ email }).select("+password");
-
-      if (!user) {
-        return next(new ErrorHandler("User not found", 404));
-      }
-
-      if (typeof user.password !== 'string') {
-        return next(new ErrorHandler("Invalid password", 500));
-      }
-
-      const isPasswordMatch = await bcrypt.compare(newPassword, user.password);
-
-      if (isPasswordMatch) {
-        return next(new ErrorHandler("Password already taken", 400));
-      }
-
-      user.password = newPassword;
-
-      await user.save();
-
-      await redis.set(req.user?._id, JSON.stringify(user));
-
-      res.status(201).json({
-        success: true,
-        user,
-      });
+      jwt.verify(token, "jwt_secret_key", (error:any, decoded:any) => {
+        if(error){
+          return next(new ErrorHandler("Error with token", 400))
+        } else {
+          bcrypt.hash(password, 10)
+          .then(hash => {
+            userModel.findByIdAndUpdate({_id:id}, {password:hash})
+            .then(u => res.status(201).json({ success: true, status: "success" }))
+            .catch(err => res.status(500).json({ success: false, status: err.message }))
+          })
+          .catch(error => res.status(500).json({ success: false, status: error.message }) )
+        }
+      })
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
@@ -477,6 +462,9 @@ export const updateUserRole = CatchAsyncError(
       const isUserExist = await userModel.findOne({ email });
       if (isUserExist) {
         const id = isUserExist._id;
+        if(isUserExist.role === role){
+          return next(new ErrorHandler("Role already exists", 400))
+        }
         updateUserRoleService(res, id, role);
       } else {
         res.status(400).json({
@@ -530,15 +518,18 @@ export const sendResetPasswordEmail = CatchAsyncError(
         return next(new ErrorHandler("User not found", 404));
       }
 
-      // const resetToken = generateResetToken();
+      const token = jwt.sign({id: user._id}, "jwt_secret_key", {expiresIn: "1d"})
 
-      // user.resetPasswordToken = resetToken;
-      // user.resetPasswordExpire = Date.now() + 3600000;  // 1 hour
-      await user.save();
+      const mailData = {
+        user: {
+          _id: user._id,
+          token: token
+        }
+      }
 
       const html = await ejs.renderFile(
         path.join(__dirname, "../mails/reset-password.ejs"),
-        // { resetToken },
+        {user: mailData},
         { async: true }
       );
 
@@ -548,7 +539,7 @@ export const sendResetPasswordEmail = CatchAsyncError(
             email: user.email,
             subject: "Reset Password",
             template: "reset-password.ejs",
-            data: {},
+            data: mailData,
           });
         }
       } catch (error: any) {
@@ -557,15 +548,10 @@ export const sendResetPasswordEmail = CatchAsyncError(
 
       res.status(200).json({
         success: true,
+        message: "Email sent successfully"
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 400));
     }
   }
 );
-
-// const generateResetToken = () => {
-//   return (
-//     Math.random().toString(36).substr(2) + Math.random().toString(36).substr(2)
-//   );
-// };

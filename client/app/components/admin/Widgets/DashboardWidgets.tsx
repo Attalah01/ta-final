@@ -110,7 +110,7 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
                   Sales Obtained
                 </h5>
               </div>
-              <div>
+              {/* <div>
                 <CircularProgressWithLabel value={
                   ordersComparePercentage?.percentChange > 0 
                   ? 100 
@@ -123,7 +123,7 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
                   : "-" + ordersComparePercentage?.percentChange.toFixed(2)
                  } %
                 </h5>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -138,7 +138,7 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
                   New Users
                 </h5>
               </div>
-              <div>
+              {/* <div>
                 <CircularProgressWithLabel value={
                   userComparePercentage?.percentChange > 0 
                   ? 100 
@@ -149,7 +149,7 @@ const DashboardWidgets: FC<Props> = ({ open }) => {
                     ? "+" + userComparePercentage?.percentChange.toFixed(2) 
                     : "-" + userComparePercentage?.percentChange.toFixed(2)} %
                 </h5>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
